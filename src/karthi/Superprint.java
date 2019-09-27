@@ -380,11 +380,11 @@ public class Superprint extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        int i=jTable1.getSelectedRow();
+        /*int i=jTable1.getSelectedRow();
         TableModel m = jTable1.getModel();
         slno.setText(m.getValueAt(i,0).toString());
         att.setText(m.getValueAt(i, 1).toString());
-        spec.setText(m.getValueAt(i, 2).toString());
+        spec.setText(m.getValueAt(i, 2).toString());*/
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void sampleplanref_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sampleplanref_ActionPerformed
