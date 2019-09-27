@@ -5,6 +5,12 @@
  */
 package karthi;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,6 +78,7 @@ public class Super1 extends javax.swing.JFrame {
         si = new javax.swing.JTextField();
         jLabel35 = new javax.swing.JLabel();
         Superprinter = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -147,6 +154,13 @@ public class Super1 extends javax.swing.JFrame {
         Superprinter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SuperprinterActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("EXIT");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -227,7 +241,10 @@ public class Super1 extends javax.swing.JFrame {
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Superprinter, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(Superprinter))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
@@ -250,7 +267,9 @@ public class Super1 extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(Superprinter)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(Superprinter)
+                                    .addComponent(jButton1))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -390,28 +409,27 @@ public class Super1 extends javax.swing.JFrame {
 
     private void SuperprinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SuperprinterActionPerformed
         // TODO add your handling code here:
-        
+        superinfo w=new superinfo();
         Connection conn=null;
         PreparedStatement pstmt=null;
         PreparedStatement test=null;
         ResultSet rs=null;
         ResultSet rsa=null;
         try{
-            work w=new work();
-            workinfo w1=new workinfo();
+            work w1=new work();
             Class.forName("com.mysql.jdbc.Driver");
             conn=MyConnection.getConnection();
             pstmt=conn.prepareStatement("select * from base where itemcode=?");
             test=conn.prepareStatement("select `ITEM.NO:`,`A`,`B`,`C`,`D`,`E`,`F`,`G`,`H`,`I` from superdata where itemcode=?");   
-            pstmt.setString(1,w.un);
-            test.setString(1,w.un);
+            pstmt.setString(1,w1.un);
+            test.setString(1,w1.un);
             rs=pstmt.executeQuery();
             rsa=test.executeQuery();
             while(rs.next()){
-                w1.partno.setText(rs.getString("itemcode"));
-                w1.desc.setText(rs.getString("ITEM"));    
-                w1.workertableview.setModel(DbUtils.resultSetToTableModel(rsa));  
-                w1.setVisible(true);
+                w.partno.setText(rs.getString("itemcode"));
+                w.desc.setText(rs.getString("ITEM"));    
+                w.workertableview.setModel(DbUtils.resultSetToTableModel(rsa));  
+                w.setVisible(true);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -422,13 +440,51 @@ public class Super1 extends javax.swing.JFrame {
                 pstmt.close();
                 rs.close();
             }
-            catch(Exception ex){             
-                
+            catch(Exception ex){            
+              
             }
         }
+        this.dispose();
         
         
+       PrinterJob job = PrinterJob.getPrinterJob();
+            job.setJobName("Print Report");
+            
+            job.setPrintable(new Printable(){
+            public int print(Graphics pg,PageFormat pf, int pageNum){
+                    pf.setOrientation(PageFormat.LANDSCAPE);
+                 if(pageNum>0){
+                    return Printable.NO_SUCH_PAGE;
+                }
+                
+                Graphics2D g2 = (Graphics2D)pg;
+                g2.translate(pf.getImageableX(), pf.getImageableY());
+                g2.scale(.645,.645);
+                
+                w.superprintvalue.paint(g2);  
+               
+                return Printable.PAGE_EXISTS;
+                         
+                
+            }
+    });
+         
+        boolean ok = job.printDialog();
+        if(ok){
+        try{
+            
+        job.print();
+        }
+        catch (PrinterException ex){}
+        } 
     }//GEN-LAST:event_SuperprinterActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        login1 w=new login1();
+        w.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -469,6 +525,7 @@ public class Super1 extends javax.swing.JFrame {
     private javax.swing.JButton Superprinter;
     private javax.swing.JButton addButton;
     public javax.swing.JTextField itemno;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
