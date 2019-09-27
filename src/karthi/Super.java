@@ -747,7 +747,7 @@ public class Super extends javax.swing.JFrame {
     private javax.swing.JTextField grnno;
     private javax.swing.JTextField item;
     private javax.swing.JTextField item1;
-    private javax.swing.JTextField itemcode;
+    public javax.swing.JTextField itemcode;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
